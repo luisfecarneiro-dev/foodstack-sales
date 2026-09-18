@@ -1,0 +1,40 @@
+{
+  "brand": {
+    "path": "/brand/foodstack-logo-source.png",
+    "source": "user-upload"
+  },
+  "showcase": [
+    {
+      "path": "/showcase/take-joao-selector.png",
+      "case": "take-joao"
+    },
+    {
+      "path": "/showcase/joao-gastrobar-menu.png",
+      "case": "take-joao"
+    },
+    {
+      "path": "/showcase/take-burguer-menu.png",
+      "case": "take-joao"
+    },
+    {
+      "path": "/showcase/capivara-home.png",
+      "case": "capivara"
+    },
+    {
+      "path": "/showcase/capivara-table-selection.png",
+      "case": "capivara"
+    },
+    {
+      "path": "/showcase/capivara-menu-cart.png",
+      "case": "capivara"
+    },
+    {
+      "path": "/showcase/capivara-my-orders.png",
+      "case": "capivara"
+    },
+    {
+      "path": "/showcase/capivara-checkout.png",
+      "case": "capivara"
+    }
+  ]
+}

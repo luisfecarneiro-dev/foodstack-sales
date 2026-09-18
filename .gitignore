@@ -1,0 +1,21 @@
+.next/
+node_modules/
+.env
+.env.local
+.env.production
+coverage/
+playwright-report/
+test-results/
+.DS_Store
+
+# vercel
+.vercel
+
+# typescript build info
+*.tsbuildinfo
+
+# playwright caches
+.blob-storage/
+
+# backup zips
+*.zip

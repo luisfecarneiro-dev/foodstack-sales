@@ -1,0 +1,247 @@
+@import "tailwindcss";
+
+:root {
+  /* FoodStack base palette (derived from the logo — see docs/04-DESIGN-SYSTEM.md) */
+  --fs-bg: #1c1814;
+  --fs-surface: #242019;
+  --fs-surface-soft: #2d271f;
+  --fs-text: #f5efe4;
+  --fs-muted: #bdb09c;
+  --fs-gold: #e7b05b;
+  --fs-orange: #d88732;
+  --fs-rust: #a55d32;
+  --fs-olive: #94945a;
+
+  /* Extension tokens */
+  --fs-hairline: rgb(245 239 228 / 0.08);
+  --fs-hairline-strong: rgb(231 176 91 / 0.22);
+  --fs-shell: rgb(245 239 228 / 0.04);
+  --fs-ink: #17130f;
+
+  /* Motion — physical, mass-simulating curves */
+  --fs-ease-out: cubic-bezier(0.32, 0.72, 0, 1);
+  --fs-ease-spring: cubic-bezier(0.34, 1.4, 0.4, 1);
+
+  /* Type scale clamps */
+  --fs-text-hero: clamp(2.75rem, 7.2vw, 5.75rem);
+  --fs-text-h2: clamp(2.125rem, 4.6vw, 3.5rem);
+  --fs-text-h3: clamp(1.45rem, 2.4vw, 2rem);
+  --fs-text-body-lg: clamp(1.05rem, 1.6vw, 1.25rem);
+}
+
+/* ---------------------------------------------------------------- */
+/* Base                                                              */
+/* ---------------------------------------------------------------- */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--fs-text);
+  background: var(--fs-bg);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--fs-gold);
+  color: var(--fs-ink);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:where(a, button, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--fs-gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------------------------------------------------------------- */
+/* Background field — farol glows, ember, vignette                   */
+/* GPU-safe: only `transform` + `opacity` animate                    */
+/* ---------------------------------------------------------------- */
+
+.fs-field {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: clip;
+  background:
+    radial-gradient(
+      ellipse 72% 42% at 50% -8%,
+      rgb(231 176 91 / 0.11),
+      transparent 62%
+    ),
+    radial-gradient(
+      ellipse 42% 30% at 85% 12%,
+      rgb(216 135 50 / 0.07),
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse 52% 34% at 12% 88%,
+      rgb(148 148 90 / 0.05),
+      transparent 65%
+    ),
+    var(--fs-bg);
+}
+
+.fs-field::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  background: radial-gradient(
+    ellipse 38% 26% at 62% 108%,
+    rgb(216 135 50 / 0.09),
+    transparent 68%
+  );
+  animation: fs-field-drift 26s var(--fs-ease-out) infinite alternate;
+  will-change: transform;
+}
+
+.fs-field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 120% 90% at 50% 50%,
+    transparent 55%,
+    rgb(13 10 7 / 0.55) 100%
+  );
+}
+
+@keyframes fs-field-drift {
+  from {
+    transform: translate3d(-2%, 0, 0) scale(1);
+    opacity: 0.85;
+  }
+  to {
+    transform: translate3d(2%, -1.5%, 0) scale(1.04);
+    opacity: 1;
+  }
+}
+
+/* Film grain — fixed, non-interactive, never on scrolling containers */
+.fs-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------------------------------------------------------------- */
+/* Layout                                                            */
+/* ---------------------------------------------------------------- */
+
+.fs-container {
+  width: min(1240px, calc(100% - 48px));
+  margin-inline: auto;
+}
+
+@media (max-width: 767px) {
+  .fs-container {
+    width: calc(100% - 32px);
+  }
+}
+
+.fs-section {
+  padding-block: clamp(7rem, 14vw, 12.5rem);
+}
+
+.fs-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid var(--fs-hairline-strong);
+  border-radius: 999px;
+  padding: 0.42rem 1rem;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--fs-gold);
+  background: rgb(231 176 91 / 0.05);
+}
+
+.fs-display,
+.fs-serif {
+  font-family: var(--font-display), Georgia, serif;
+  font-variation-settings: "SOFT" 25, "WONK" 1;
+  text-wrap: balance;
+}
+
+/* Scroll-in choreography: blur + rise resolves once. Heavy, physical. */
+.fs-io-reveal {
+  opacity: 0;
+  transform: translate3d(0, 4rem, 0);
+  filter: blur(8px);
+  transition:
+    opacity 0.9s var(--fs-ease-out),
+    transform 0.9s var(--fs-ease-out),
+    filter 0.9s var(--fs-ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.fs-io-reveal.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  filter: blur(0);
+}
+
+/* Shared transitions */
+
+.fs-ease {
+  transition-timing-function: var(--fs-ease-out);
+}
+
+.fs-lift {
+  transition:
+    transform 0.7s var(--fs-ease-out),
+    opacity 0.7s var(--fs-ease-out),
+    border-color 0.7s var(--fs-ease-out),
+    background-color 0.7s var(--fs-ease-out),
+    box-shadow 0.7s var(--fs-ease-out);
+}
+
+/* ---------------------------------------------------------------- */
+/* Reduced motion                                                    */
+/* ---------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .fs-field::before {
+    animation: none;
+  }
+
+  .fs-io-reveal,
+  .fs-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
