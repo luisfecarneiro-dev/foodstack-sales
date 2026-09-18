@@ -60,6 +60,8 @@ test.describe("CSP runtime compliance", () => {
     });
     await page.goto("/", { waitUntil: "domcontentloaded" });
     await page.waitForSelector('a:has-text("Quero conversar")');
+    // Leva um bloco de reveal ao viewport — prova de hidratação sob CSP.
+    await page.locator("#como-funciona").scrollIntoViewIfNeeded();
     await page.waitForTimeout(2000);
     expect(violations).toEqual([]);
 

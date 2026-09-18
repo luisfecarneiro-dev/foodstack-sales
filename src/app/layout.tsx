@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { Fraunces, Sora } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/config/site";
@@ -30,11 +31,21 @@ export const viewport: Viewport = {
   colorScheme: "dark"
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: Readonly<{ children: React.ReactNode }>) {
+  // Padrão 07Dev (07DevPage RP): ler headers() torna o render dinâmico
+  // e permite ao Next.js propagar o nonce do middleware aos scripts
+  // bootstrap — sem isso, o HTML estático nasce sem nonce e o CSP
+  // bloqueia toda a hidratação em produção.
+  const nonce = (await headers()).get("x-nonce") ?? "";
+
   return (
-    <html lang="pt-BR" className={`${display.variable} ${body.variable}`}>
+    <html
+      lang="pt-BR"
+      className={`${display.variable} ${body.variable}`}
+      data-nonce={nonce}
+    >
       <body>
         <div className="fs-field" aria-hidden="true" />
         <div className="fs-grain" aria-hidden="true" />
